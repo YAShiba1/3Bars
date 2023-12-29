@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
@@ -8,18 +6,19 @@ public class TextHealth : MonoBehaviour
     [SerializeField] private Player _player;
     [SerializeField] private TMP_Text _textHealth;
 
-    private void Update()
+    private void OnEnable()
     {
-        Display();
+        _player.HealthChanged += OnHealthChanged;
+        OnHealthChanged(_player.CurrentHealth);
     }
 
-    private void Display()
+    private void OnDisable()
     {
-        _textHealth.text = FormatText();
+        _player.HealthChanged -= OnHealthChanged;
     }
 
-    private string FormatText()
+    public void OnHealthChanged(float newHealth)
     {
-        return _player.CurrentHealth.ToString("F0") + "/" + _player.MaxHealth;
+        _textHealth.text = newHealth.ToString("F0") + "/" + _player.MaxHealth;
     }
 }

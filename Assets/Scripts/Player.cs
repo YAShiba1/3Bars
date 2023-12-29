@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Events;
 
 public class Player : MonoBehaviour
 {
@@ -12,6 +13,8 @@ public class Player : MonoBehaviour
         set { _currentHealth = Mathf.Clamp(value, MinHealth, MaxHealth); } 
     }
 
+    public event UnityAction<float> HealthChanged;
+
     private void Start()
     {
         CurrentHealth = MinHealth;
@@ -20,10 +23,12 @@ public class Player : MonoBehaviour
     public void TakeDamage(float damageValue)
     {
         CurrentHealth -= damageValue;
+        HealthChanged?.Invoke(_currentHealth);
     }
 
     public void Healing(float healValue)
     {
         CurrentHealth += healValue;
+        HealthChanged?.Invoke(_currentHealth);
     }
 }
