@@ -1,23 +1,17 @@
 using TMPro;
 using UnityEngine;
 
-public class TextHealth : MonoBehaviour
+public class TextHealth : HealthBar
 {
-    [SerializeField] private Player _player;
     [SerializeField] private TMP_Text _textHealth;
 
-    private void OnEnable()
+    protected override void SubscribeToHealthEvent() 
     {
-        _player.HealthChanged += OnHealthChanged;
+        base.SubscribeToHealthEvent();
         OnHealthChanged(_player.CurrentHealth);
     }
 
-    private void OnDisable()
-    {
-        _player.HealthChanged -= OnHealthChanged;
-    }
-
-    public void OnHealthChanged(float newHealth)
+    protected override void OnHealthChanged(float newHealth)
     {
         _textHealth.text = newHealth.ToString("F0") + "/" + _player.MaxHealth;
     }

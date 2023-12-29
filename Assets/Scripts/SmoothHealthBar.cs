@@ -1,12 +1,9 @@
 using System.Collections;
 using UnityEngine;
-using UnityEngine.UI;
 
-public class SmoothHealthBar : MonoBehaviour
+public class SmoothHealthBar : HealthBar
 {
     [SerializeField] private float _speed;
-    [SerializeField] private Player _player;
-    [SerializeField] private Slider _slider;
 
     private Coroutine _changeValueOfBarJob;
 
@@ -17,14 +14,14 @@ public class SmoothHealthBar : MonoBehaviour
         _slider.value = _player.CurrentHealth;
     }
 
-    public void ChangeBarValue()
+    protected override void OnHealthChanged(float newHealth)
     {
         if (_changeValueOfBarJob != null)
         {
             StopCoroutine(_changeValueOfBarJob);
         }
 
-        _changeValueOfBarJob = StartCoroutine(ChangeSliderValue(_player.CurrentHealth));
+        _changeValueOfBarJob = StartCoroutine(ChangeSliderValue(newHealth));
     }
 
     private IEnumerator ChangeSliderValue(float targetValue)
@@ -32,7 +29,6 @@ public class SmoothHealthBar : MonoBehaviour
         while (_slider.value != targetValue)
         {
             _slider.value = Mathf.MoveTowards(_slider.value, targetValue, _speed * Time.deltaTime);
-
             yield return null;
         }
     }

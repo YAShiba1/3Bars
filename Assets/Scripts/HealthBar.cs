@@ -3,21 +3,28 @@ using UnityEngine.UI;
 
 public class HealthBar : MonoBehaviour
 {
-    [SerializeField] private Player _player;
-    [SerializeField] private Slider _slider;
+    [SerializeField] protected Slider _slider;
+    [SerializeField] protected Player _player;
 
     private void OnEnable()
     {
-        _player.HealthChanged += OnHealthChanged;
+        SubscribeToHealthEvent();
     }
 
     private void OnDisable()
     {
+        UnsubscribeFromHealthEvent();
+    }
+
+    protected virtual void SubscribeToHealthEvent() 
+    {
+        _player.HealthChanged += OnHealthChanged;
+    }
+
+    protected virtual void UnsubscribeFromHealthEvent() 
+    {
         _player.HealthChanged -= OnHealthChanged;
     }
 
-    public void OnHealthChanged(float newHealth)
-    {
-        _slider.value = newHealth;
-    }
+    protected virtual void OnHealthChanged(float newHealth) { }
 }
